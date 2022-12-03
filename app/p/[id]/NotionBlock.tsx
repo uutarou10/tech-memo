@@ -5,7 +5,6 @@ import {
   TableRowBlockObjectResponse
 } from '@notionhq/client/build/src/api-endpoints'
 import {getClient, getPageBlocks} from '../../../api/notion'
-import Image from 'next/image'
 
 type ListWrapper = {
   type: '__list_wrapper',
