@@ -1,8 +1,6 @@
-import {getClient, getPageBlocks} from '../../../api/notion'
-import NotionBlock, { NotionBlocks } from './NotionBlock'
+import { NotionBlocks } from '../../../../components/notionBlock'
 
 export default async function Page({params: {id}}: {params: {id: string}}) {
-  // const pageBlocks = await getPageBlocks(getClient(), id)
 
   return (
     <div>
