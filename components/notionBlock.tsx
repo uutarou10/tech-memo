@@ -18,7 +18,7 @@ const RichText: React.FC<{ richText: RichTextItemResponse }> = ({ richText }) =>
     <br/> : null}{text}</Fragment>)
 
   return richText.href
-    ? (<a href={richText.href} target="_blank" rel="noreferrer">{Text}</a>)
+    ? (<a className={'underline underline-offset-4'} href={richText.href} target="_blank" rel="noreferrer">{Text}</a>)
     : (<Fragment>{Text}</Fragment>)
 }
 
@@ -116,7 +116,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
     case '__list_wrapper':
       const Wrapper = block.listType === 'bullet' || block.listType === 'todo' ? 'ul' : 'ol'
       const listTypeClass = block.listType === 'bullet' || block.listType === 'todo' ? 'list-disc' : 'list-decimal'
-      return (<Wrapper className={`${listTypeClass}`}>{block.blocks.map(block => <NotionBlock block={block} key={block.id}/>)}</Wrapper>)
+      return (<Wrapper className={`${listTypeClass} pl-7 mb-2`}>{block.blocks.map(block => <NotionBlock block={block} key={block.id}/>)}</Wrapper>)
     case 'bulleted_list_item':
       return (
         <li>
@@ -135,7 +135,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       )
     case 'quote':
       return (
-        <blockquote>
+        <blockquote className={'border-l-2 border-l-black mb-2 pl-4'}>
           <RichTexts richTexts={block.quote.rich_text} />
           {/* @ts-ignore Server Components */}
           {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
@@ -153,7 +153,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       )
     case 'toggle':
       return (
-        <details>
+        <details className={'mb-2'}>
           <summary>
             <RichTexts richTexts={block.toggle.rich_text} />
           </summary>
@@ -166,10 +166,10 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       return null
     case 'code':
       return (
-        <div>
+        <figure className={'mb-2'}>
           <code><RichTexts richTexts={block.code.rich_text}/></code>
-          <p><RichTexts richTexts={block.code.caption} /></p>
-        </div>
+          <figcaption><RichTexts richTexts={block.code.caption} /></figcaption>
+        </figure>
       )
     case 'callout':
       // iconの対応が必要
