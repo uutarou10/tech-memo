@@ -14,14 +14,94 @@ type ListWrapper = {
   id: string
 }
 
-// TODO: 文字装飾を扱えるようにする
 const RichText: React.FC<{ richText: RichTextItemResponse }> = ({ richText }) => {
+  const className = (() => {
+    let result = []
+    if (richText.annotations.bold) {
+      result.push('font-bold')
+    }
+    if (richText.annotations.italic) {
+      result.push('italic')
+    }
+    if (richText.annotations.underline) {
+      result.push('underline')
+    }
+    if (richText.annotations.strikethrough) {
+      result.push('line-through')
+    }
+    switch (richText.annotations.color) {
+      case 'gray':
+        result.push('text-gray-600')
+        break;
+      case 'brown':
+        result.push('text-yellow-700')
+        break;
+      case 'orange':
+        result.push('text-orange-600')
+        break;
+      case 'yellow':
+        result.push('text-yellow-600')
+        break;
+      case 'green':
+        result.push('text-green-600')
+        break;
+      case 'blue':
+        result.push('text-blue-600')
+        break;
+      case 'purple':
+        result.push('text-purple-600')
+        break;
+      case 'pink':
+        result.push('text-pink-600')
+        break;
+      case 'red':
+        result.push('text-red-600')
+        break;
+      case 'gray_background':
+        result.push('bg-gray-200')
+        break;
+      case 'brown_background':
+        result.push('bg-yellow-600')
+        break;
+      case 'orange_background':
+        result.push('bg-orange-200')
+        break;
+      case 'yellow_background':
+        result.push('bg-yellow-200')
+        break;
+      case 'green_background':
+        result.push('bg-green-200')
+        break;
+      case 'blue_background':
+        result.push('bg-blue-200')
+        break;
+      case 'purple_background':
+        result.push('bg-purple-200')
+        break;
+      case 'pink_background':
+        result.push('bg-pink-200')
+        break;
+      case 'red_background':
+        result.push('bg-red-200')
+        break;
+      case 'default':
+      default:
+        // do nothing
+    }
+
+    return result.join(' ')
+  })()
+
   const Text = richText.plain_text.split('\n').map((text, i) => <Fragment key={i}>{i !== 0 ?
     <br/> : null}{text}</Fragment>)
 
-  return richText.href
-    ? (<a className={'underline underline-offset-4'} href={richText.href} target="_blank" rel="noreferrer">{Text}</a>)
-    : (<Fragment>{Text}</Fragment>)
+  if (richText.href) {
+    return (<a className={`underline underline-offset-4 text-sky-800 ${className}`} href={richText.href} target="_blank" rel="noreferrer">{Text}</a>)
+  } else if (richText.annotations.code) {
+    return (<code className={`bg-stone-200 text-red-500 p-1 ${className}`}>{Text}</code>)
+  } else {
+    return (<span className={className}>{Text}</span>)
+  }
 }
 
 const RichTexts: React.FC<{richTexts: RichTextItemResponse[]}> = ({richTexts}) => (<>{richTexts.map((richText, i) => <RichText key={i} richText={richText} />)}</>)
