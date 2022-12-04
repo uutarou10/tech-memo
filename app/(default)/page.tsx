@@ -10,7 +10,7 @@ export default async function Home() {
       <section>
         <h2 className="sr-only">記事一覧</h2>
         {pages.map(page => (
-          <ArticleListItem key={page.id} title={page.title} date={page.createdAt} id={page.id} />
+          <ArticleListItem key={page.id} title={page.title} date={page.createdAt} id={page.id} description={page.description} />
         ))}
       </section>
     </main>

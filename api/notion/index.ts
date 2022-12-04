@@ -11,7 +11,10 @@ export const getClient = (revalidate: number = 600) => new Client({
 export const getPageList = async (client: Client) => {
   const { results } = await client.databases.query({
     database_id: constants.notionDatabaseId,
-    sorts: [{timestamp: 'created_time', direction: 'descending'}]
+    sorts: [{timestamp: 'created_time', direction: 'descending'}],
+    filter: {
+      and: [{property: 'publish', checkbox: {equals: true}}, {property: 'description', rich_text: {is_not_empty: true}}]
+    }
   })
 
   return results.map(result => {
@@ -26,10 +29,18 @@ export const getPageList = async (client: Client) => {
       return result.properties.name.title.reduce((prev, current) => prev + current.plain_text, '')
     })()
 
+    const description = (() => {
+      if (result.properties.description.type !== 'rich_text') {
+        return ''
+      }
+      return result.properties.description.rich_text.reduce((prev, current) => prev + current.plain_text, '')
+    })()
+
     return {
       createdAt: new Date(result.created_time),
       title,
-      id: result.id
+      id: result.id,
+      description
     }
   }).filter((result): result is NonNullable<typeof result> => result !== null)
 }
@@ -47,7 +58,7 @@ export const getPageBlocks = async (client: Client, pageId: string) => {
   })
 }
 
-export const getPageMeta = async (client: Client, pageId: string): Promise<{title: string, createdAt: Date}> => {
+export const getPageMeta = async (client: Client, pageId: string): Promise<{title: string, createdAt: Date, description: string}> => {
   const page = await client.pages.retrieve({
     page_id: pageId
   })
@@ -63,9 +74,21 @@ export const getPageMeta = async (client: Client, pageId: string): Promise<{titl
     return page.properties.name.title.reduce((prev, current) => prev + current.plain_text, '')
   })()
 
+  const description = (() => {
+    if (page.properties.description.type !== 'rich_text') {
+      return ''
+    }
+    return page.properties.description.rich_text.reduce((prev, current) => prev + current.plain_text, '')
+  })()
+
+  const published = page.properties.publish.type === 'checkbox' && page.properties.publish.checkbox
+  if (!published) {
+    throw new Error('forbidden')
+  }
 
   return {
     title,
+    description,
     createdAt: new Date(page.created_time)
   }
 }
