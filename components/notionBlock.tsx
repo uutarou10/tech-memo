@@ -75,7 +75,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
   switch (block.type) {
     case 'paragraph':
       return (
-        <p>
+        <p className={'mb-2'}>
           {block.paragraph.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i}/>
           ))}
@@ -85,27 +85,27 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       )
     case 'heading_1':
       return (
-        <h1>
+        <h2 className={'font-bold text-2xl py-2'}>
           {block.heading_1.rich_text.map((richText, i) => (
-            <RichText richText={richText} key={i}/>
-          ))}
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
-        </h1>
-      )
-    case 'heading_2':
-      return (
-        <h2>
-          {block.heading_2.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i}/>
           ))}
           {/* @ts-ignore Server Components */}
           {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
         </h2>
       )
+    case 'heading_2':
+      return (
+        <h3 className={'font-bold text-xl py-2'}>
+          {block.heading_2.rich_text.map((richText, i) => (
+            <RichText richText={richText} key={i}/>
+          ))}
+          {/* @ts-ignore Server Components */}
+          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+        </h3>
+      )
     case 'heading_3':
       return (
-        <h3>
+        <h3 className={'font-bold text-lg py-2'}>
           {block.heading_3.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i}/>
           ))}
@@ -115,7 +115,8 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       )
     case '__list_wrapper':
       const Wrapper = block.listType === 'bullet' || block.listType === 'todo' ? 'ul' : 'ol'
-      return (<Wrapper>{block.blocks.map(block => <NotionBlock block={block} key={block.id}/>)}</Wrapper>)
+      const listTypeClass = block.listType === 'bullet' || block.listType === 'todo' ? 'list-disc' : 'list-decimal'
+      return (<Wrapper className={`${listTypeClass}`}>{block.blocks.map(block => <NotionBlock block={block} key={block.id}/>)}</Wrapper>)
     case 'bulleted_list_item':
       return (
         <li>

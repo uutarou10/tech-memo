@@ -45,5 +45,27 @@ export const getPageBlocks = async (client: Client, pageId: string) => {
     }
     return result
   })
+}
 
+export const getPageMeta = async (client: Client, pageId: string): Promise<{title: string, createdAt: Date}> => {
+  const page = await client.pages.retrieve({
+    page_id: pageId
+  })
+
+  if (!isFullPage(page)) {
+    throw new Error('Unexpected response type')
+  }
+
+  const title = (() => {
+    if (page.properties.name.type !== 'title') {
+      return ''
+    }
+    return page.properties.name.title.reduce((prev, current) => prev + current.plain_text, '')
+  })()
+
+
+  return {
+    title,
+    createdAt: new Date(page.created_time)
+  }
 }
