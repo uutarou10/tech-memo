@@ -151,7 +151,7 @@ const Code = (props: {richTexts: RichTextItemResponse[], language: string, class
   const html = hljs.highlightAuto(code).value
 
   return (
-    <code className={`hljs !p-4 w-full block whitespace-pre leading-normal ${className}`} dangerouslySetInnerHTML={{__html: html}} />
+    <code className={`hljs !p-3 !md:p-4 w-full block whitespace-pre leading-normal overflow-x-scroll ${className}`} dangerouslySetInnerHTML={{__html: html}} />
   )
 }
 
