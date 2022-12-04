@@ -4,7 +4,7 @@ import constants from '../../constants'
 export const getClient = (revalidate: number = 600) => new Client({
   auth: constants.notionApiKey,
   fetch: (url, init) => {
-    return fetch(url, {...init, next: {revalidate}})
+    return fetch(url, {...init, cache: 'no-store', next: {revalidate}})
   }
 })
 
