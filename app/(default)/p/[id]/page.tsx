@@ -1,6 +1,7 @@
 import { NotionBlocks } from '../../../../components/notionBlock'
 import {getClient, getPageMeta} from '../../../../api/notion'
 import dayjs from 'dayjs'
+import 'highlight.js/styles/a11y-dark.css'
 
 export default async function Page({params: {id}}: {params: {id: string}}) {
   const {title, createdAt} = await getPageMeta(getClient(), id)

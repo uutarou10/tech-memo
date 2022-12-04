@@ -5,6 +5,7 @@ import {
   TableRowBlockObjectResponse
 } from '@notionhq/client/build/src/api-endpoints'
 import {getClient, getPageBlocks} from '../api/notion'
+import hljs from 'highlight.js'
 
 type ListWrapper = {
   type: '__list_wrapper',
@@ -13,6 +14,7 @@ type ListWrapper = {
   id: string
 }
 
+// TODO: 文字装飾を扱えるようにする
 const RichText: React.FC<{ richText: RichTextItemResponse }> = ({ richText }) => {
   const Text = richText.plain_text.split('\n').map((text, i) => <Fragment key={i}>{i !== 0 ?
     <br/> : null}{text}</Fragment>)
@@ -68,6 +70,16 @@ const Table = async ({parentBlockId, hasColumnHeader, hasRowHeader}: {parentBloc
         return <TableRow key={i} cells={block.table_row.cells} hasColumnHeader={hasColumnHeader} hasRowHeader={hasRowHeader} rowNumber={i} />
       })}
     </table>
+  )
+}
+
+const Code = ({richTexts, language}: {richTexts: RichTextItemResponse[], language: string}) => {
+  // Notionの仕様上はcode blockの中で文字装飾が使えるが、無視してplain_textを取り出して使う
+  const code = richTexts.reduce((prev, richText) => (prev + richText.plain_text), '')
+  const html = hljs.highlight(code, {language}).value
+
+  return (
+    <code className={'hljs !p-4 w-full block'} dangerouslySetInnerHTML={{__html: html}} />
   )
 }
 
@@ -167,7 +179,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
     case 'code':
       return (
         <figure className={'mb-2'}>
-          <code><RichTexts richTexts={block.code.rich_text}/></code>
+          <Code richTexts={block.code.rich_text} language={block.code.language} />
           <figcaption><RichTexts richTexts={block.code.caption} /></figcaption>
         </figure>
       )
