@@ -153,10 +153,11 @@ const Table = async ({parentBlockId, hasColumnHeader, hasRowHeader}: {parentBloc
   )
 }
 
-const Code = ({richTexts, language}: {richTexts: RichTextItemResponse[], language: string}) => {
+const Code = ({richTexts}: {richTexts: RichTextItemResponse[], language: string}) => {
   // Notionの仕様上はcode blockの中で文字装飾が使えるが、無視してplain_textを取り出して使う
+  // NOTE: Notion側でlanguageを指定するとその値を取得することができるが、highlight.jsに直接渡せない形式があったりしてエラーになるので一旦auto detectにしてみる。余裕があればマッピングするのが良さそう
   const code = richTexts.reduce((prev, richText) => (prev + richText.plain_text), '')
-  const html = hljs.highlight(code, {language}).value
+  const html = hljs.highlightAuto(code).value
 
   return (
     <code className={'hljs !p-4 w-full block'} dangerouslySetInnerHTML={{__html: html}} />
