@@ -14,7 +14,7 @@ const Header: FC<JSX.IntrinsicElements['div']> = (props) => {
     <div {...props} className={`flex flex-col gap-2 ${props.className || ''}`}>
       <header>
         <h1 className="text-3xl font-extrabold">tips chips</h1>
-        <p className="text-sm">日々の作業で出てきたメモを置いておくページ</p>
+        <p className="text-sm">日々の作業で出てきた技術メモの切れ端を置いておくページ</p>
       </header>
       <nav>
         <ul className="flex flex-row">
