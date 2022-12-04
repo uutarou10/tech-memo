@@ -111,7 +111,7 @@ const TableRow: React.FC<{cells: TableRowBlockObjectResponse['table_row']['cells
     {cells.map((cell, i) => {
       const Wrapper = (hasColumnHeader && i === 0) || (hasRowHeader && rowNumber === 0) ? 'th' : 'td'
       return (
-        <Wrapper key={i}>
+        <Wrapper key={i} className={`border border-gray-200 p-1 text-left ${Wrapper === 'th' ? 'bg-gray-100' : ''}`}>
           <RichTexts richTexts={cell} />
         </Wrapper>
       )
@@ -123,44 +123,35 @@ const Table = async ({parentBlockId, hasColumnHeader, hasRowHeader}: {parentBloc
   const blocks = await getPageBlocks(getClient(), parentBlockId)
 
   return (
-    <table>
-      {blocks.map((block, i) => {
-        if (block.type !== 'table_row') {
-          // tableのchildrenにはtable_rowしかかえってこないハズ
-          return null
-        }
+    <table className={'mb-2 w-full border border-gray-200 py-3 max-w-[1280px]'}>
+      {blocks[0] && blocks[0].type === 'table_row' && hasRowHeader && (
+          <thead>
+            <TableRow cells={blocks[0].table_row.cells} hasColumnHeader={hasColumnHeader} hasRowHeader={hasRowHeader} rowNumber={0} />
+          </thead>
+      )}
 
-        if (i === 0) {
-          if (hasRowHeader) {
-            return (
-              <thead key={i}>
-                <TableRow cells={block.table_row.cells} hasColumnHeader={hasColumnHeader} hasRowHeader={hasRowHeader} rowNumber={i} />
-              </thead>
-            )
-          } else {
-            return (
-              <Fragment key={i}>
-                <thead></thead>
-                <TableRow cells={block.table_row.cells} hasColumnHeader={hasColumnHeader} hasRowHeader={hasRowHeader} rowNumber={i} />
-              </Fragment>
-            )
+      <tbody>
+        {blocks.map((block, i) => {
+          if ((i === 0 && hasRowHeader) || block.type !== 'table_row') {
+            return null
           }
-        }
 
-        return <TableRow key={i} cells={block.table_row.cells} hasColumnHeader={hasColumnHeader} hasRowHeader={hasRowHeader} rowNumber={i} />
-      })}
+          return <TableRow key={i} cells={block.table_row.cells} hasColumnHeader={hasColumnHeader} hasRowHeader={hasRowHeader} rowNumber={i} />
+        })}
+      </tbody>
     </table>
   )
 }
 
-const Code = ({richTexts}: {richTexts: RichTextItemResponse[], language: string}) => {
+const Code = (props: {richTexts: RichTextItemResponse[], language: string, className: string}) => {
+  const {richTexts, language, className} = props
   // Notionの仕様上はcode blockの中で文字装飾が使えるが、無視してplain_textを取り出して使う
   // NOTE: Notion側でlanguageを指定するとその値を取得することができるが、highlight.jsに直接渡せない形式があったりしてエラーになるので一旦auto detectにしてみる。余裕があればマッピングするのが良さそう
   const code = richTexts.reduce((prev, richText) => (prev + richText.plain_text), '')
   const html = hljs.highlightAuto(code).value
 
   return (
-    <code className={'hljs !p-4 w-full block'} dangerouslySetInnerHTML={{__html: html}} />
+    <code className={`hljs !p-4 w-full block whitespace-pre leading-normal ${className}`} dangerouslySetInnerHTML={{__html: html}} />
   )
 }
 
@@ -260,31 +251,31 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
     case 'code':
       return (
         <figure className={'mb-2'}>
-          <Code richTexts={block.code.rich_text} language={block.code.language} />
-          <figcaption><RichTexts richTexts={block.code.caption} /></figcaption>
+          <Code className={'mb-1'} richTexts={block.code.rich_text} language={block.code.language} />
+          {block.code.caption.length > 0  && <figcaption className={'text-sm text-gray-700'}><RichTexts richTexts={block.code.caption} /></figcaption>}
         </figure>
       )
     case 'callout':
       // iconの対応が必要
       return (
-        <div>
+        <section className={'mb-2 p-4 bg-gray-100'}>
           <RichTexts richTexts={block.callout.rich_text} />
           {/* @ts-ignore Server Components */}
           {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
-        </div>
+        </section>
       )
     case 'divider':
-      return <hr />
+      return <hr className={'py-2'} />
     case 'column_list':
       return (
-        <div data-column-wrapper="">
+        <div className={'flex flex-col md:flex-row gap-0 md:gap-2'}>
           {/* @ts-ignore Server Components */}
           {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
         </div>
       )
     case 'column':
       return (
-        <div data-column="">
+        <div className={'flex-grow'}>
           {/* @ts-ignore Server Components */}
           {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
         </div>
@@ -299,20 +290,20 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       // ひとまずURLをそのまま展開するようにしておく
       // TODO: caption未対応
       return (
-        <p><a href={block.embed.url} target="_blank" rel="noreferrer">{block.embed.url}</a></p>
+        <p className={'mb-2'}><a className={'underline underline-offset-4 text-sky-800'} href={block.embed.url} target="_blank" rel="noreferrer">{block.embed.url}</a></p>
       )
     case 'bookmark':
       return (
-        <p><a href={block.bookmark.url} target="_blank" rel="noreferrer">{block.bookmark.url}</a></p>
+        <p className={'mb-2'}><a className={'underline underline-offset-4 text-sky-800'} href={block.bookmark.url} target="_blank" rel="noreferrer">{block.bookmark.url}</a></p>
       )
     case 'image':
       const imageUrl = block.image.type === 'external' ? block.image.external.url : block.image.file.url
-      // todo: ちゃんとしたaltを入れる
+      // ちゃんとしたaltを入れたいがどうしたものか…
       return (
-        <figure>
+        <figure className={'mb-2'}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={imageUrl} alt="" />
-          {block.image.caption.length >= 0 ? (<figcaption><RichTexts richTexts={block.image.caption} /></figcaption>) : null}
+          <img className={'mb-1 max-w-[1280px]'} src={imageUrl} alt="画像" />
+          {block.image.caption.length >= 0 ? (<figcaption className={'text-gray-700 text-sm'}><RichTexts richTexts={block.image.caption} /></figcaption>) : null}
         </figure>
       )
     //  以下面倒なので作る気がない要素たち
