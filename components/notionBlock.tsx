@@ -300,9 +300,9 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       const imageUrl = block.image.type === 'external' ? block.image.external.url : block.image.file.url
       // ちゃんとしたaltを入れたいがどうしたものか…
       return (
-        <figure className={'mb-2'}>
+        <figure className={'mb-2 max-w-full'}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={'mb-1 max-w-[1280px]'} src={imageUrl} alt="画像" />
+          <img className={'mb-1 w-full max-w-[1280px]'} src={imageUrl} alt="画像" />
           {block.image.caption.length >= 0 ? (<figcaption className={'text-gray-700 text-sm'}><RichTexts richTexts={block.image.caption} /></figcaption>) : null}
         </figure>
       )
