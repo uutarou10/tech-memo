@@ -4,6 +4,8 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'highlight.js/styles/a11y-dark.css'
 
+export const revalidate = 60
+
 export default async function Page({params: {id}}: {params: {id: string}}) {
   dayjs.extend(relativeTime)
   const {title, createdAt, description} = await getPageMeta(getClient(), id)
