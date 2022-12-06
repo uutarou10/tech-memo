@@ -1,5 +1,6 @@
 import {Client, isFullBlock, isFullPage} from '@notionhq/client'
 import constants from '../../constants'
+import React from 'react'
 
 export const getClient = (revalidate: number = 600) => new Client({
   auth: constants.notionApiKey,
@@ -45,6 +46,8 @@ export const getPageList = async (client: Client) => {
   }).filter((result): result is NonNullable<typeof result> => result !== null)
 }
 
+export const getPageListWithCache = React.cache(() => getPageList(getClient()))
+
 export const getPageBlocks = async (client: Client, pageId: string) => {
   const {results} = await client.blocks.children.list({
     block_id: pageId
@@ -57,6 +60,8 @@ export const getPageBlocks = async (client: Client, pageId: string) => {
     return result
   })
 }
+
+export const getPageBlocksWithCache = React.cache((pageId: string) => getPageBlocks(getClient(), pageId))
 
 export const getPageMeta = async (client: Client, pageId: string): Promise<{title: string, createdAt: Date, description: string}> => {
   const page = await client.pages.retrieve({
@@ -92,3 +97,5 @@ export const getPageMeta = async (client: Client, pageId: string): Promise<{titl
     createdAt: new Date(page.created_time)
   }
 }
+
+export const getPageMetaWithCache = React.cache((pageId: string) => getPageMeta(getClient(), pageId))
