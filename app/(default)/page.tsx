@@ -1,8 +1,9 @@
-import Link from 'next/link'
 import {getClient, getPageList} from '../../api/notion'
 import ArticleListItem from '../../components/articleListItem'
+import { headers } from 'next/headers'
 
 export default async function Home() {
+  headers() // dynamic renderingを有効化するために参照している
   const pages = await getPageList(getClient())
 
   return (
