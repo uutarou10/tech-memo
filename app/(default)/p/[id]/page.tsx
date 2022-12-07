@@ -1,14 +1,17 @@
 import { NotionBlocks } from '../../../../components/notionBlock'
-import {getPageMetaWithCache} from '../../../../api/notion'
+import {getClient, getPageMeta} from '../../../../api/notion'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'highlight.js/styles/a11y-dark.css'
 
-export const revalidate = 60
+export async function generateStaticParams() {
+  return []
+}
 
-export default async function Page({params: {id}}: {params: {id: string}}) {
+export default async function Page({params}: {params: {id: string}}) {
+  const { id } = params
   dayjs.extend(relativeTime)
-  const {title, createdAt, description} = await getPageMetaWithCache(id)
+  const {title, createdAt, description} = await getPageMeta(getClient(), id)
   const formattedDate = dayjs(createdAt).format('YYYY-MM-DD')
 
   return (

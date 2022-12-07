@@ -1,12 +1,12 @@
-import {getPageListWithCache} from '../../api/notion'
 import ArticleListItem from '../../components/articleListItem'
-import { headers } from 'next/headers'
+import {getClient, getPageList} from '../../api/notion'
 
-export const revalidate = 60
+export async function generateStaticParams() {
+  return []
+}
 
 export default async function Home() {
-  headers() // dynamic renderingを有効化するために参照している
-  const pages = await getPageListWithCache()
+  const pages = await getPageList(getClient())
 
   return (
     <main>
