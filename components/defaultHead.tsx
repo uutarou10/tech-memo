@@ -2,13 +2,15 @@ type HeadProps = {
   title?: string
   description?: string
   ogType?: string
+  ogImage?: string
 }
 
 const DefaultHead = (props: HeadProps) => {
   const {
     title,
     description,
-    ogType
+    ogType,
+    ogImage
   } = props
   const titleTag = title ? `${title} - tips chips` : 'tips chips'
 
@@ -22,6 +24,7 @@ const DefaultHead = (props: HeadProps) => {
       <meta property={'og:description'} content={description} />
       <meta property={'og:title'} content={title} />
       {ogType && <meta property={'og:type'} content={ogType} />}
+      {ogImage && <meta property={'og:image'} content={ogImage} />}
     </>
   )
 }
