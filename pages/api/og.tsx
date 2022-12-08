@@ -26,8 +26,8 @@ export default function(req: NextRequest) {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          width: `${width - 48}px`,
-          height: `${height - 48}px`,
+          width: `${width - 64}px`,
+          height: `${height - 64}px`,
           background: 'white',
           color: 'black'
         }}>
