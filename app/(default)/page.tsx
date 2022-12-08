@@ -2,7 +2,8 @@ import ArticleListItem from '../../components/articleListItem'
 import {getClient, getPageList} from '../../api/notion'
 
 export async function generateStaticParams() {
-  return []
+  const pages = await getPageList(getClient())
+  return pages.map(page => ({id: page.id}))
 }
 
 export default async function Home() {
