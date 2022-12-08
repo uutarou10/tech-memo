@@ -1,11 +1,12 @@
 import { NotionBlocks } from '../../../../components/notionBlock'
-import {getClient, getPageMeta} from '../../../../api/notion'
+import {getClient, getPageList, getPageMeta} from '../../../../api/notion'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'highlight.js/styles/a11y-dark.css'
 
 export async function generateStaticParams() {
-  return []
+  const pages = await getPageList(getClient())
+  return pages.map(page => ({id: page.id}))
 }
 
 export default async function Page({params}: {params: {id: string}}) {
