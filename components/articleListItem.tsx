@@ -15,10 +15,10 @@ const ArticleListItem: React.FC<Props> = ({ title, date, id, description }) => {
   return (
     <article className={'py-4'}>
       <Link
-        className={'hover:underline underline-offset-4 text-sky-800 w-fit'}
+        className={'w-fit text-sky-800 underline-offset-4 hover:underline'}
         href={`/p/${id}`}
       >
-        <h2 className={'text-lg mb-1 w-fit font-bold'}>{title}</h2>
+        <h2 className={'mb-1 w-fit text-lg font-bold'}>{title}</h2>
       </Link>
       <p className={'text-gray-600'}>{description}</p>
       <time dateTime={formattedDate} className={'text-sm text-slate-600'}>

@@ -2,7 +2,7 @@ import React, { FC } from 'react'
 import Link from 'next/link'
 
 const ListItem = ({ children }: { children: React.ReactNode }) => {
-  return <li className="text-base underline py-2 mr-2 last:mr-0">{children}</li>
+  return <li className="mr-2 py-2 text-base underline last:mr-0">{children}</li>
 }
 
 const Header: FC<JSX.IntrinsicElements['div']> = props => {

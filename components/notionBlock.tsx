@@ -104,7 +104,7 @@ const RichText: React.FC<{ richText: RichTextItemResponse }> = ({
   if (richText.href) {
     return (
       <a
-        className={`underline underline-offset-4 text-sky-800 ${className}`}
+        className={`text-sky-800 underline underline-offset-4 ${className}`}
         href={richText.href}
         target="_blank"
         rel="noreferrer"
@@ -114,7 +114,7 @@ const RichText: React.FC<{ richText: RichTextItemResponse }> = ({
     )
   } else if (richText.annotations.code) {
     return (
-      <code className={`bg-stone-200 text-red-500 p-1 ${className}`}>
+      <code className={`bg-stone-200 p-1 text-red-500 ${className}`}>
         {Text}
       </code>
     )
@@ -171,7 +171,7 @@ const Table = async ({
   const blocks = await getPageBlocks(getClient(), parentBlockId)
 
   return (
-    <table className={'mb-2 w-full border border-gray-200 py-3 max-w-[1280px]'}>
+    <table className={'mb-2 w-full max-w-[1280px] border border-gray-200 py-3'}>
       {blocks[0] && blocks[0].type === 'table_row' && hasRowHeader && (
         <thead>
           <TableRow
@@ -220,7 +220,7 @@ const Code = (props: {
 
   return (
     <code
-      className={`hljs !p-3 !md:p-4 w-full block whitespace-pre leading-normal overflow-x-scroll ${className}`}
+      className={`hljs !md:p-4 block w-full overflow-x-scroll whitespace-pre !p-3 leading-normal ${className}`}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   )
@@ -246,7 +246,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       )
     case 'heading_1':
       return (
-        <h2 className={'font-bold text-2xl py-2'}>
+        <h2 className={'py-2 text-2xl font-bold'}>
           {block.heading_1.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -260,7 +260,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       )
     case 'heading_2':
       return (
-        <h3 className={'font-bold text-xl py-2'}>
+        <h3 className={'py-2 text-xl font-bold'}>
           {block.heading_2.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -274,7 +274,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       )
     case 'heading_3':
       return (
-        <h3 className={'font-bold text-lg py-2'}>
+        <h3 className={'py-2 text-lg font-bold'}>
           {block.heading_3.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -294,7 +294,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           ? 'list-disc'
           : 'list-decimal'
       return (
-        <Wrapper className={`${listTypeClass} pl-7 mb-2`}>
+        <Wrapper className={`${listTypeClass} mb-2 pl-7`}>
           {block.blocks.map(block => (
             <NotionBlock block={block} key={block.id} />
           ))}
@@ -330,7 +330,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       )
     case 'quote':
       return (
-        <blockquote className={'border-l-2 border-l-black mb-2 pl-4'}>
+        <blockquote className={'mb-2 border-l-2 border-l-black pl-4'}>
           <RichTexts richTexts={block.quote.rich_text} />
           {block.has_children ? (
             <>
@@ -389,7 +389,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
     case 'callout':
       // iconの対応が必要
       return (
-        <section className={'mb-2 p-4 bg-gray-100'}>
+        <section className={'mb-2 bg-gray-100 p-4'}>
           <RichTexts richTexts={block.callout.rich_text} />
           {block.has_children ? (
             <>
@@ -403,7 +403,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       return <hr className={'py-2'} />
     case 'column_list':
       return (
-        <div className={'flex flex-col md:flex-row gap-0 md:gap-2'}>
+        <div className={'flex flex-col gap-0 md:flex-row md:gap-2'}>
           {block.has_children ? (
             <>
               {/* @ts-ignore Server Components */}
@@ -443,7 +443,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       return (
         <p className={'mb-2'}>
           <a
-            className={'underline underline-offset-4 text-sky-800'}
+            className={'text-sky-800 underline underline-offset-4'}
             href={block.embed.url}
             target="_blank"
             rel="noreferrer"
@@ -456,7 +456,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       return (
         <p className={'mb-2'}>
           <a
-            className={'underline underline-offset-4 text-sky-800'}
+            className={'text-sky-800 underline underline-offset-4'}
             href={block.bookmark.url}
             target="_blank"
             rel="noreferrer"
@@ -480,7 +480,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
             alt="画像"
           />
           {block.image.caption.length >= 0 ? (
-            <figcaption className={'text-gray-700 text-sm'}>
+            <figcaption className={'text-sm text-gray-700'}>
               <RichTexts richTexts={block.image.caption} />
             </figcaption>
           ) : null}

@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   return (
     <main>
       <div className={'mb-8'}>
-        <h1 className={'text-3xl font-bold mb-1'}>{title}</h1>
+        <h1 className={'mb-1 text-3xl font-bold'}>{title}</h1>
         <p className={'text-gray-600'}>{description}</p>
         <time className={'text-gray-600'} dateTime={formattedDate}>
           {formattedDate}
