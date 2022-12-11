@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import {
   BlockObjectResponse,
+  CodeBlockObjectResponse,
   RichTextItemResponse,
   TableRowBlockObjectResponse
 } from '@notionhq/client/build/src/api-endpoints'
@@ -206,17 +207,25 @@ const Table = async ({
 
 const Code = (props: {
   richTexts: RichTextItemResponse[]
-  language: string
+  language: CodeBlockObjectResponse['code']['language']
   className: string
 }) => {
   const { richTexts, language, className } = props
-  // Notionの仕様上はcode blockの中で文字装飾が使えるが、無視してplain_textを取り出して使う
-  // NOTE: Notion側でlanguageを指定するとその値を取得することができるが、highlight.jsに直接渡せない形式があったりしてエラーになるので一旦auto detectにしてみる。余裕があればマッピングするのが良さそう
   const code = richTexts.reduce(
     (prev, richText) => prev + richText.plain_text,
     ''
   )
-  const html = hljs.highlightAuto(code).value
+
+  // 手抜きだが、Notionから渡されてきたlanguageをそのままhighlight.jsに渡している
+  // highlight.js側が対応していないと例外をthrowするのでその時はhighlightAutoを使う
+  const html = (() => {
+    const formattedLanguage = language === 'plain text' ? 'plaintext' : language
+    try {
+      return hljs.highlight(code, { language: formattedLanguage }).value
+    } catch {
+      return hljs.highlightAuto(code).value
+    }
+  })()
 
   return (
     <code

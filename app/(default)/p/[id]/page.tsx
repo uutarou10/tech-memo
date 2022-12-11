@@ -2,7 +2,7 @@ import { NotionBlocks } from '#/components/notionBlock'
 import { getClient, getPageList, getPageMeta } from '#/api/notion'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import 'highlight.js/styles/a11y-dark.css'
+import 'highlight.js/styles/github-dark.css'
 
 export async function generateStaticParams() {
   const pages = await getPageList(getClient())
