@@ -1,5 +1,5 @@
-import { getClient, getPageMeta } from '../../../../api/notion'
-import DefaultHead from '../../../../components/defaultHead'
+import { getClient, getPageMeta } from '#/api/notion'
+import DefaultHead from '#/components/defaultHead'
 
 const ArticlePageHead = async ({
   params: { id }

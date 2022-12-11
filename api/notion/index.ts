@@ -1,5 +1,5 @@
 import { Client, isFullBlock, isFullPage } from '@notionhq/client'
-import constants from '../../constants'
+import constants from '#/constants'
 
 export const getClient = (revalidate: number = 600) =>
   new Client({

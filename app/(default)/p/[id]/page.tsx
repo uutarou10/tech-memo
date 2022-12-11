@@ -1,5 +1,5 @@
-import { NotionBlocks } from '../../../../components/notionBlock'
-import { getClient, getPageList, getPageMeta } from '../../../../api/notion'
+import { NotionBlocks } from '#/components/notionBlock'
+import { getClient, getPageList, getPageMeta } from '#/api/notion'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'highlight.js/styles/a11y-dark.css'

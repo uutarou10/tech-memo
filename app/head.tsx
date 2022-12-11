@@ -1,4 +1,4 @@
-import DefaultHead from '../components/defaultHead'
+import DefaultHead from '#/components/defaultHead'
 
 export default function Head() {
   return (

@@ -1,5 +1,5 @@
-import ArticleListItem from '../../components/articleListItem'
-import { getClient, getPageList } from '../../api/notion'
+import ArticleListItem from '#/components/articleListItem'
+import { getClient, getPageList } from '#/api/notion'
 
 export async function generateStaticParams() {
   return []
