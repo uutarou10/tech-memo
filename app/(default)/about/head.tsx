@@ -1,9 +1,12 @@
-import DefaultHead from "../../../components/defaultHead";
+import DefaultHead from '../../../components/defaultHead'
 
 export default function Head() {
   return (
     <>
-      <DefaultHead title={'このサイトについて'} description={"tips chipsについて"} />
+      <DefaultHead
+        title={'このサイトについて'}
+        description={'tips chipsについて'}
+      />
     </>
   )
 }

@@ -1,20 +1,22 @@
-import React, {Fragment} from 'react'
+import React, { Fragment } from 'react'
 import {
   BlockObjectResponse,
   RichTextItemResponse,
   TableRowBlockObjectResponse
 } from '@notionhq/client/build/src/api-endpoints'
-import {getClient, getPageBlocks} from '../api/notion'
+import { getClient, getPageBlocks } from '../api/notion'
 import hljs from 'highlight.js'
 
 type ListWrapper = {
-  type: '__list_wrapper',
-  listType: 'bullet' | 'numbered' | 'todo',
-  blocks: BlockObjectResponse[],
+  type: '__list_wrapper'
+  listType: 'bullet' | 'numbered' | 'todo'
+  blocks: BlockObjectResponse[]
   id: string
 }
 
-const RichText: React.FC<{ richText: RichTextItemResponse }> = ({ richText }) => {
+const RichText: React.FC<{ richText: RichTextItemResponse }> = ({
+  richText
+}) => {
   const className = (() => {
     let result = []
     if (richText.annotations.bold) {
@@ -32,86 +34,124 @@ const RichText: React.FC<{ richText: RichTextItemResponse }> = ({ richText }) =>
     switch (richText.annotations.color) {
       case 'gray':
         result.push('text-gray-600')
-        break;
+        break
       case 'brown':
         result.push('text-yellow-700')
-        break;
+        break
       case 'orange':
         result.push('text-orange-600')
-        break;
+        break
       case 'yellow':
         result.push('text-yellow-600')
-        break;
+        break
       case 'green':
         result.push('text-green-600')
-        break;
+        break
       case 'blue':
         result.push('text-blue-600')
-        break;
+        break
       case 'purple':
         result.push('text-purple-600')
-        break;
+        break
       case 'pink':
         result.push('text-pink-600')
-        break;
+        break
       case 'red':
         result.push('text-red-600')
-        break;
+        break
       case 'gray_background':
         result.push('bg-gray-200')
-        break;
+        break
       case 'brown_background':
         result.push('bg-yellow-600')
-        break;
+        break
       case 'orange_background':
         result.push('bg-orange-200')
-        break;
+        break
       case 'yellow_background':
         result.push('bg-yellow-200')
-        break;
+        break
       case 'green_background':
         result.push('bg-green-200')
-        break;
+        break
       case 'blue_background':
         result.push('bg-blue-200')
-        break;
+        break
       case 'purple_background':
         result.push('bg-purple-200')
-        break;
+        break
       case 'pink_background':
         result.push('bg-pink-200')
-        break;
+        break
       case 'red_background':
         result.push('bg-red-200')
-        break;
+        break
       case 'default':
       default:
-        // do nothing
+      // do nothing
     }
 
     return result.join(' ')
   })()
 
-  const Text = richText.plain_text.split('\n').map((text, i) => <Fragment key={i}>{i !== 0 ?
-    <br/> : null}{text}</Fragment>)
+  const Text = richText.plain_text.split('\n').map((text, i) => (
+    <Fragment key={i}>
+      {i !== 0 ? <br /> : null}
+      {text}
+    </Fragment>
+  ))
 
   if (richText.href) {
-    return (<a className={`underline underline-offset-4 text-sky-800 ${className}`} href={richText.href} target="_blank" rel="noreferrer">{Text}</a>)
+    return (
+      <a
+        className={`underline underline-offset-4 text-sky-800 ${className}`}
+        href={richText.href}
+        target="_blank"
+        rel="noreferrer"
+      >
+        {Text}
+      </a>
+    )
   } else if (richText.annotations.code) {
-    return (<code className={`bg-stone-200 text-red-500 p-1 ${className}`}>{Text}</code>)
+    return (
+      <code className={`bg-stone-200 text-red-500 p-1 ${className}`}>
+        {Text}
+      </code>
+    )
   } else {
-    return (<span className={className}>{Text}</span>)
+    return <span className={className}>{Text}</span>
   }
 }
 
-const RichTexts: React.FC<{richTexts: RichTextItemResponse[]}> = ({richTexts}) => (<>{richTexts.map((richText, i) => <RichText key={i} richText={richText} />)}</>)
+const RichTexts: React.FC<{ richTexts: RichTextItemResponse[] }> = ({
+  richTexts
+}) => (
+  <>
+    {richTexts.map((richText, i) => (
+      <RichText key={i} richText={richText} />
+    ))}
+  </>
+)
 
-const TableRow: React.FC<{cells: TableRowBlockObjectResponse['table_row']['cells'], hasColumnHeader: boolean, hasRowHeader: boolean, rowNumber: number}> = ({cells, hasColumnHeader, hasRowHeader, rowNumber}) => (
+const TableRow: React.FC<{
+  cells: TableRowBlockObjectResponse['table_row']['cells']
+  hasColumnHeader: boolean
+  hasRowHeader: boolean
+  rowNumber: number
+}> = ({ cells, hasColumnHeader, hasRowHeader, rowNumber }) => (
   <tr>
     {cells.map((cell, i) => {
-      const Wrapper = (hasColumnHeader && i === 0) || (hasRowHeader && rowNumber === 0) ? 'th' : 'td'
+      const Wrapper =
+        (hasColumnHeader && i === 0) || (hasRowHeader && rowNumber === 0)
+          ? 'th'
+          : 'td'
       return (
-        <Wrapper key={i} className={`border border-gray-200 p-1 text-left ${Wrapper === 'th' ? 'bg-gray-100' : ''}`}>
+        <Wrapper
+          key={i}
+          className={`border border-gray-200 p-1 text-left ${
+            Wrapper === 'th' ? 'bg-gray-100' : ''
+          }`}
+        >
           <RichTexts richTexts={cell} />
         </Wrapper>
       )
@@ -119,15 +159,28 @@ const TableRow: React.FC<{cells: TableRowBlockObjectResponse['table_row']['cells
   </tr>
 )
 
-const Table = async ({parentBlockId, hasColumnHeader, hasRowHeader}: {parentBlockId: string, hasColumnHeader: boolean, hasRowHeader: boolean}) => {
+const Table = async ({
+  parentBlockId,
+  hasColumnHeader,
+  hasRowHeader
+}: {
+  parentBlockId: string
+  hasColumnHeader: boolean
+  hasRowHeader: boolean
+}) => {
   const blocks = await getPageBlocks(getClient(), parentBlockId)
 
   return (
     <table className={'mb-2 w-full border border-gray-200 py-3 max-w-[1280px]'}>
       {blocks[0] && blocks[0].type === 'table_row' && hasRowHeader && (
-          <thead>
-            <TableRow cells={blocks[0].table_row.cells} hasColumnHeader={hasColumnHeader} hasRowHeader={hasRowHeader} rowNumber={0} />
-          </thead>
+        <thead>
+          <TableRow
+            cells={blocks[0].table_row.cells}
+            hasColumnHeader={hasColumnHeader}
+            hasRowHeader={hasRowHeader}
+            rowNumber={0}
+          />
+        </thead>
       )}
 
       <tbody>
@@ -136,93 +189,155 @@ const Table = async ({parentBlockId, hasColumnHeader, hasRowHeader}: {parentBloc
             return null
           }
 
-          return <TableRow key={i} cells={block.table_row.cells} hasColumnHeader={hasColumnHeader} hasRowHeader={hasRowHeader} rowNumber={i} />
+          return (
+            <TableRow
+              key={i}
+              cells={block.table_row.cells}
+              hasColumnHeader={hasColumnHeader}
+              hasRowHeader={hasRowHeader}
+              rowNumber={i}
+            />
+          )
         })}
       </tbody>
     </table>
   )
 }
 
-const Code = (props: {richTexts: RichTextItemResponse[], language: string, className: string}) => {
-  const {richTexts, language, className} = props
+const Code = (props: {
+  richTexts: RichTextItemResponse[]
+  language: string
+  className: string
+}) => {
+  const { richTexts, language, className } = props
   // Notionの仕様上はcode blockの中で文字装飾が使えるが、無視してplain_textを取り出して使う
   // NOTE: Notion側でlanguageを指定するとその値を取得することができるが、highlight.jsに直接渡せない形式があったりしてエラーになるので一旦auto detectにしてみる。余裕があればマッピングするのが良さそう
-  const code = richTexts.reduce((prev, richText) => (prev + richText.plain_text), '')
+  const code = richTexts.reduce(
+    (prev, richText) => prev + richText.plain_text,
+    ''
+  )
   const html = hljs.highlightAuto(code).value
 
   return (
-    <code className={`hljs !p-3 !md:p-4 w-full block whitespace-pre leading-normal overflow-x-scroll ${className}`} dangerouslySetInnerHTML={{__html: html}} />
+    <code
+      className={`hljs !p-3 !md:p-4 w-full block whitespace-pre leading-normal overflow-x-scroll ${className}`}
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
   )
 }
 
-const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ block }) => {
+const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
+  block
+}) => {
   switch (block.type) {
     case 'paragraph':
       return (
         <p className={'mb-2'}>
           {block.paragraph.rich_text.map((richText, i) => (
-            <RichText richText={richText} key={i}/>
+            <RichText richText={richText} key={i} />
           ))}
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </p>
       )
     case 'heading_1':
       return (
         <h2 className={'font-bold text-2xl py-2'}>
           {block.heading_1.rich_text.map((richText, i) => (
-            <RichText richText={richText} key={i}/>
+            <RichText richText={richText} key={i} />
           ))}
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </h2>
       )
     case 'heading_2':
       return (
         <h3 className={'font-bold text-xl py-2'}>
           {block.heading_2.rich_text.map((richText, i) => (
-            <RichText richText={richText} key={i}/>
+            <RichText richText={richText} key={i} />
           ))}
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </h3>
       )
     case 'heading_3':
       return (
         <h3 className={'font-bold text-lg py-2'}>
           {block.heading_3.rich_text.map((richText, i) => (
-            <RichText richText={richText} key={i}/>
+            <RichText richText={richText} key={i} />
           ))}
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </h3>
       )
     case '__list_wrapper':
-      const Wrapper = block.listType === 'bullet' || block.listType === 'todo' ? 'ul' : 'ol'
-      const listTypeClass = block.listType === 'bullet' || block.listType === 'todo' ? 'list-disc' : 'list-decimal'
-      return (<Wrapper className={`${listTypeClass} pl-7 mb-2`}>{block.blocks.map(block => <NotionBlock block={block} key={block.id}/>)}</Wrapper>)
+      const Wrapper =
+        block.listType === 'bullet' || block.listType === 'todo' ? 'ul' : 'ol'
+      const listTypeClass =
+        block.listType === 'bullet' || block.listType === 'todo'
+          ? 'list-disc'
+          : 'list-decimal'
+      return (
+        <Wrapper className={`${listTypeClass} pl-7 mb-2`}>
+          {block.blocks.map(block => (
+            <NotionBlock block={block} key={block.id} />
+          ))}
+        </Wrapper>
+      )
     case 'bulleted_list_item':
       return (
         <li>
-          {block.bulleted_list_item.rich_text.map((richText, i) => <RichText richText={richText} key={i}/>)}
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.bulleted_list_item.rich_text.map((richText, i) => (
+            <RichText richText={richText} key={i} />
+          ))}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </li>
       )
     case 'numbered_list_item':
       return (
         <li>
-          {block.numbered_list_item.rich_text.map((richText, i) => <RichText richText={richText} key={i}/>)}
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.numbered_list_item.rich_text.map((richText, i) => (
+            <RichText richText={richText} key={i} />
+          ))}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </li>
       )
     case 'quote':
       return (
         <blockquote className={'border-l-2 border-l-black mb-2 pl-4'}>
           <RichTexts richTexts={block.quote.rich_text} />
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </blockquote>
       )
     case 'to_do':
@@ -231,8 +346,12 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
           {/* markup直した方が良さそう */}
           <input type={'checkbox'} defaultChecked={block.to_do.checked} />
           <RichTexts richTexts={block.to_do.rich_text} />
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </li>
       )
     case 'toggle':
@@ -241,8 +360,12 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
           <summary>
             <RichTexts richTexts={block.toggle.rich_text} />
           </summary>
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </details>
       )
     case 'equation':
@@ -251,8 +374,16 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
     case 'code':
       return (
         <figure className={'mb-2'}>
-          <Code className={'mb-1'} richTexts={block.code.rich_text} language={block.code.language} />
-          {block.code.caption.length > 0  && <figcaption className={'text-sm text-gray-700'}><RichTexts richTexts={block.code.caption} /></figcaption>}
+          <Code
+            className={'mb-1'}
+            richTexts={block.code.rich_text}
+            language={block.code.language}
+          />
+          {block.code.caption.length > 0 && (
+            <figcaption className={'text-sm text-gray-700'}>
+              <RichTexts richTexts={block.code.caption} />
+            </figcaption>
+          )}
         </figure>
       )
     case 'callout':
@@ -260,8 +391,12 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       return (
         <section className={'mb-2 p-4 bg-gray-100'}>
           <RichTexts richTexts={block.callout.rich_text} />
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </section>
       )
     case 'divider':
@@ -269,20 +404,36 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
     case 'column_list':
       return (
         <div className={'flex flex-col md:flex-row gap-0 md:gap-2'}>
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </div>
       )
     case 'column':
       return (
         <div className={'flex-grow'}>
-          {/* @ts-ignore Server Components */}
-          {block.has_children ? <NotionBlocks parentBlockId={block.id} /> : null}
+          {block.has_children ? (
+            <>
+              {/* @ts-ignore Server Components */}
+              <NotionBlocks parentBlockId={block.id} />
+            </>
+          ) : null}
         </div>
       )
     case 'table':
-      {/* @ts-ignore Server Components */}
-      return <Table parentBlockId={block.id} hasColumnHeader={block.table.has_column_header} hasRowHeader={block.table.has_row_header} />
+      return (
+        <>
+          {/* @ts-ignore Server Components */}
+          <Table
+            parentBlockId={block.id}
+            hasColumnHeader={block.table.has_column_header}
+            hasRowHeader={block.table.has_row_header}
+          />
+        </>
+      )
     case 'table_row':
       // table rowはTableコンポーネント内で処理しているのでここでは何もしない
       return null
@@ -290,20 +441,49 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
       // ひとまずURLをそのまま展開するようにしておく
       // TODO: caption未対応
       return (
-        <p className={'mb-2'}><a className={'underline underline-offset-4 text-sky-800'} href={block.embed.url} target="_blank" rel="noreferrer">{block.embed.url}</a></p>
+        <p className={'mb-2'}>
+          <a
+            className={'underline underline-offset-4 text-sky-800'}
+            href={block.embed.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {block.embed.url}
+          </a>
+        </p>
       )
     case 'bookmark':
       return (
-        <p className={'mb-2'}><a className={'underline underline-offset-4 text-sky-800'} href={block.bookmark.url} target="_blank" rel="noreferrer">{block.bookmark.url}</a></p>
+        <p className={'mb-2'}>
+          <a
+            className={'underline underline-offset-4 text-sky-800'}
+            href={block.bookmark.url}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {block.bookmark.url}
+          </a>
+        </p>
       )
     case 'image':
-      const imageUrl = block.image.type === 'external' ? block.image.external.url : block.image.file.url
+      const imageUrl =
+        block.image.type === 'external'
+          ? block.image.external.url
+          : block.image.file.url
       // ちゃんとしたaltを入れたいがどうしたものか…
       return (
         <figure className={'mb-2 max-w-full'}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className={'mb-1 w-full max-w-[1280px]'} src={imageUrl} alt="画像" />
-          {block.image.caption.length >= 0 ? (<figcaption className={'text-gray-700 text-sm'}><RichTexts richTexts={block.image.caption} /></figcaption>) : null}
+          <img
+            className={'mb-1 w-full max-w-[1280px]'}
+            src={imageUrl}
+            alt="画像"
+          />
+          {block.image.caption.length >= 0 ? (
+            <figcaption className={'text-gray-700 text-sm'}>
+              <RichTexts richTexts={block.image.caption} />
+            </figcaption>
+          ) : null}
         </figure>
       )
     //  以下面倒なので作る気がない要素たち
@@ -324,28 +504,54 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({ b
   }
 }
 
-export const NotionBlocks = async ({ parentBlockId }: { parentBlockId: string }) => {
+export const NotionBlocks = async ({
+  parentBlockId
+}: {
+  parentBlockId: string
+}) => {
   const blocks = await getPageBlocks(getClient(), parentBlockId)
 
   const _blocks = blocks.reduce((prev, block, i) => {
-    if (block.type !== 'bulleted_list_item' && block.type !== 'numbered_list_item' && block.type !== 'to_do') {
+    if (
+      block.type !== 'bulleted_list_item' &&
+      block.type !== 'numbered_list_item' &&
+      block.type !== 'to_do'
+    ) {
       return [...prev, block]
     }
 
     const lastBlock = prev.at(-1)
     if (!lastBlock || lastBlock.type !== '__list_wrapper') {
-      const listType: 'bullet' | 'numbered' | 'todo' = block.type === 'bulleted_list_item' ? 'bullet' : block.type === 'to_do' ? 'todo' : 'numbered'
-      return [...prev, { type: '__list_wrapper' as const, listType: listType, blocks: [block], id: block.id }]
+      const listType: 'bullet' | 'numbered' | 'todo' =
+        block.type === 'bulleted_list_item'
+          ? 'bullet'
+          : block.type === 'to_do'
+          ? 'todo'
+          : 'numbered'
+      return [
+        ...prev,
+        {
+          type: '__list_wrapper' as const,
+          listType: listType,
+          blocks: [block],
+          id: block.id
+        }
+      ]
     }
 
     return [
       ...prev.slice(0, -1),
       { ...lastBlock, blocks: [...lastBlock.blocks, block] }
     ]
-
   }, [] as (BlockObjectResponse | ListWrapper)[])
 
-  return <>{_blocks.map(block => <NotionBlock block={block} key={block.id}/>)}</>
+  return (
+    <>
+      {_blocks.map(block => (
+        <NotionBlock block={block} key={block.id} />
+      ))}
+    </>
+  )
 }
 
 export default NotionBlock

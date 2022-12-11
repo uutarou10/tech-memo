@@ -1,4 +1,4 @@
-import {NotionBlocks} from '../../../components/notionBlock'
+import { NotionBlocks } from '../../../components/notionBlock'
 
 const AboutPage = () => {
   return (
