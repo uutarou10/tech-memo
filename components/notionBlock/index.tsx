@@ -7,6 +7,7 @@ import {
 } from '@notionhq/client/build/src/api-endpoints'
 import { getClient, getPageBlocks } from '#/api/notion'
 import hljs from 'highlight.js'
+import Paragraph from '#/components/paragraph'
 
 type ListWrapper = {
   type: '__list_wrapper'
@@ -241,7 +242,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
   switch (block.type) {
     case 'paragraph':
       return (
-        <p className={'mb-2'}>
+        <Paragraph>
           {block.paragraph.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -251,7 +252,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </p>
+        </Paragraph>
       )
     case 'heading_1':
       return (
@@ -450,7 +451,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       // ひとまずURLをそのまま展開するようにしておく
       // TODO: caption未対応
       return (
-        <p className={'mb-2'}>
+        <Paragraph>
           <a
             className={'text-sky-800 underline underline-offset-4'}
             href={block.embed.url}
@@ -459,11 +460,11 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           >
             {block.embed.url}
           </a>
-        </p>
+        </Paragraph>
       )
     case 'bookmark':
       return (
-        <p className={'mb-2'}>
+        <Paragraph>
           <a
             className={'text-sky-800 underline underline-offset-4'}
             href={block.bookmark.url}
@@ -472,7 +473,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           >
             {block.bookmark.url}
           </a>
-        </p>
+        </Paragraph>
       )
     case 'image':
       const imageUrl =
