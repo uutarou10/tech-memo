@@ -8,6 +8,7 @@ import {
 import { getClient, getPageBlocks } from '#/api/notion'
 import hljs from 'highlight.js'
 import Paragraph from '#/components/paragraph'
+import Heading from '#/components/heading'
 
 type ListWrapper = {
   type: '__list_wrapper'
@@ -256,7 +257,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       )
     case 'heading_1':
       return (
-        <h2 className={'py-2 text-2xl font-bold'}>
+        <Heading level={2}>
           {block.heading_1.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -266,11 +267,11 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </h2>
+        </Heading>
       )
     case 'heading_2':
       return (
-        <h3 className={'py-2 text-xl font-bold'}>
+        <Heading level={3}>
           {block.heading_2.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -280,11 +281,11 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </h3>
+        </Heading>
       )
     case 'heading_3':
       return (
-        <h3 className={'py-2 text-lg font-bold'}>
+        <Heading level={4}>
           {block.heading_3.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -294,7 +295,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </h3>
+        </Heading>
       )
     case '__list_wrapper':
       const Wrapper =
