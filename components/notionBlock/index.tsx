@@ -9,6 +9,7 @@ import { getClient, getPageBlocks } from '#/api/notion'
 import hljs from 'highlight.js'
 import Paragraph from '#/components/paragraph'
 import Heading from '#/components/heading'
+import BlockQuote from '#/components/blockQuote'
 
 type ListWrapper = {
   type: '__list_wrapper'
@@ -341,7 +342,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       )
     case 'quote':
       return (
-        <blockquote className={'mb-2 border-l-2 border-l-black pl-4'}>
+        <BlockQuote>
           <RichTexts richTexts={block.quote.rich_text} />
           {block.has_children ? (
             <>
@@ -349,7 +350,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </blockquote>
+        </BlockQuote>
       )
     case 'to_do':
       return (
