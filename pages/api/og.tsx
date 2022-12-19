@@ -39,9 +39,12 @@ export default function (req: NextRequest) {
         >
           <div
             style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
               lineHeight: '150%',
               fontSize: '64px',
-              maxWidth: `80%`,
+              width: '80%',
               textAlign: 'center',
               marginBottom: '12px'
             }}
