@@ -10,6 +10,7 @@ import hljs from 'highlight.js'
 import Paragraph from '#/components/paragraph'
 import Heading from '#/components/heading'
 import BlockQuote from '#/components/blockQuote'
+import Image from 'next/image'
 
 type ListWrapper = {
   type: '__list_wrapper'
@@ -484,10 +485,10 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           : block.image.file.url
       // ちゃんとしたaltを入れたいがどうしたものか…
       return (
-        <figure className={'mb-2 max-w-full'}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className={'mb-1 w-full max-w-[1280px]'}
+        <figure className={'relative mb-2 block h-96 max-w-full'}>
+          <Image
+            fill={true}
+            className={'mb-1 object-contain last:mb-0'}
             src={imageUrl}
             alt="画像"
           />
