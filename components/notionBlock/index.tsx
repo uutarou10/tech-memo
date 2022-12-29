@@ -11,6 +11,7 @@ import Paragraph from '#/components/paragraph'
 import Heading from '#/components/heading'
 import BlockQuote from '#/components/blockQuote'
 import Image from 'next/image'
+import ImageBlock from '#/components/ImageBlock'
 
 type ListWrapper = {
   type: '__list_wrapper'
@@ -485,19 +486,16 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           : block.image.file.url
       // ちゃんとしたaltを入れたいがどうしたものか…
       return (
-        <figure className={'relative mb-2 block h-96 max-w-full'}>
-          <Image
-            fill={true}
-            className={'mb-1 object-contain last:mb-0'}
-            src={imageUrl}
-            alt="画像"
-          />
-          {block.image.caption.length >= 0 ? (
-            <figcaption className={'text-sm text-gray-700'}>
-              <RichTexts richTexts={block.image.caption} />
-            </figcaption>
-          ) : null}
-        </figure>
+        <ImageBlock
+          blockId={block.id}
+          caption={
+            block.image.caption.length >= 0 ? (
+              <figcaption className={'text-center text-sm text-gray-700'}>
+                <RichTexts richTexts={block.image.caption} />
+              </figcaption>
+            ) : null
+          }
+        />
       )
     //  以下面倒なので作る気がない要素たち
     case 'template':
