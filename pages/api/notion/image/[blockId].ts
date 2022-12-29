@@ -24,7 +24,7 @@ export default async function notionImage(
     return
   }
 
-  res.setHeader('Cache-Control', 's-maxage=3500')
+  // res.setHeader('Cache-Control', 's-maxage=3500')
 
   if (response.image.type === 'external') {
     res.json({
