@@ -7,6 +7,11 @@ import {
 } from '@notionhq/client/build/src/api-endpoints'
 import { getClient, getPageBlocks } from '#/api/notion'
 import hljs from 'highlight.js'
+import Paragraph from '#/components/paragraph'
+import Heading from '#/components/heading'
+import BlockQuote from '#/components/blockQuote'
+import Image from 'next/image'
+import ImageBlock from '#/components/ImageBlock'
 
 type ListWrapper = {
   type: '__list_wrapper'
@@ -241,7 +246,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
   switch (block.type) {
     case 'paragraph':
       return (
-        <p className={'mb-2'}>
+        <Paragraph>
           {block.paragraph.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -251,11 +256,11 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </p>
+        </Paragraph>
       )
     case 'heading_1':
       return (
-        <h2 className={'py-2 text-2xl font-bold'}>
+        <Heading level={2}>
           {block.heading_1.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -265,11 +270,11 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </h2>
+        </Heading>
       )
     case 'heading_2':
       return (
-        <h3 className={'py-2 text-xl font-bold'}>
+        <Heading level={3}>
           {block.heading_2.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -279,11 +284,11 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </h3>
+        </Heading>
       )
     case 'heading_3':
       return (
-        <h3 className={'py-2 text-lg font-bold'}>
+        <Heading level={4}>
           {block.heading_3.rich_text.map((richText, i) => (
             <RichText richText={richText} key={i} />
           ))}
@@ -293,7 +298,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </h3>
+        </Heading>
       )
     case '__list_wrapper':
       const Wrapper =
@@ -339,7 +344,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       )
     case 'quote':
       return (
-        <blockquote className={'mb-2 border-l-2 border-l-black pl-4'}>
+        <BlockQuote>
           <RichTexts richTexts={block.quote.rich_text} />
           {block.has_children ? (
             <>
@@ -347,7 +352,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
-        </blockquote>
+        </BlockQuote>
       )
     case 'to_do':
       return (
@@ -450,7 +455,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       // ひとまずURLをそのまま展開するようにしておく
       // TODO: caption未対応
       return (
-        <p className={'mb-2'}>
+        <Paragraph>
           <a
             className={'text-sky-800 underline underline-offset-4'}
             href={block.embed.url}
@@ -459,11 +464,11 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           >
             {block.embed.url}
           </a>
-        </p>
+        </Paragraph>
       )
     case 'bookmark':
       return (
-        <p className={'mb-2'}>
+        <Paragraph>
           <a
             className={'text-sky-800 underline underline-offset-4'}
             href={block.bookmark.url}
@@ -472,7 +477,7 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           >
             {block.bookmark.url}
           </a>
-        </p>
+        </Paragraph>
       )
     case 'image':
       const imageUrl =
@@ -481,19 +486,16 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           : block.image.file.url
       // ちゃんとしたaltを入れたいがどうしたものか…
       return (
-        <figure className={'mb-2 max-w-full'}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className={'mb-1 w-full max-w-[1280px]'}
-            src={imageUrl}
-            alt="画像"
-          />
-          {block.image.caption.length >= 0 ? (
-            <figcaption className={'text-sm text-gray-700'}>
-              <RichTexts richTexts={block.image.caption} />
-            </figcaption>
-          ) : null}
-        </figure>
+        <ImageBlock
+          blockId={block.id}
+          caption={
+            block.image.caption.length >= 0 ? (
+              <figcaption className={'text-center text-sm text-gray-700'}>
+                <RichTexts richTexts={block.image.caption} />
+              </figcaption>
+            ) : null
+          }
+        />
       )
     //  以下面倒なので作る気がない要素たち
     case 'template':
