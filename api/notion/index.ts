@@ -51,7 +51,8 @@ export const getPageList = async (client: Client) => {
         createdAt: new Date(result.created_time),
         title,
         id: result.id,
-        description
+        description,
+        lastEdited: new Date(result.last_edited_time)
       }
     })
     .filter((result): result is NonNullable<typeof result> => result !== null)
