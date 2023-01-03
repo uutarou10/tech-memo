@@ -30,6 +30,7 @@
     "xmlbuilder2": "^3.0.2"
   },
   "devDependencies": {
+    "@tailwindcss/line-clamp": "^0.4.2",
     "@types/jsdom": "^20.0.1",
     "autoprefixer": "^10.4.13",
     "eslint-config-prettier": "^8.5.0",

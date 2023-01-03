@@ -1,14 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { JSDOM } from 'jsdom'
+import { BookmarkData } from '#/types/bookmark'
 
-type OpenGraphData = {
-  url: string
-  imageUrl: string | null
-  title: string | null
-  description: string | null
-}
-
-type Response = null | OpenGraphData | { isError: true; message: string }
+type Response = null | BookmarkData | { isError: true; message: string }
 export default async function bookmarkApi(
   req: NextApiRequest,
   res: NextApiResponse<Response>
@@ -50,7 +44,7 @@ export default async function bookmarkApi(
   }
 }
 
-const fetchOpengraphData = async (url: string): Promise<OpenGraphData> => {
+const fetchOpengraphData = async (url: string): Promise<BookmarkData> => {
   const response = await fetch(url, {
     headers: { 'Accept-Language': 'ja,en-US;q=0.9,en;q=0.8,ja-JP;q=0.7' }
   })
