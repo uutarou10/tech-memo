@@ -10,9 +10,8 @@ import hljs from 'highlight.js'
 import Paragraph from '#/components/paragraph'
 import Heading from '#/components/heading'
 import BlockQuote from '#/components/blockQuote'
-import Image from 'next/image'
 import ImageBlock from '#/components/ImageBlock'
-import Bookmark from '#/components/bookmark'
+import Bookmark, { Skeleton } from '#/components/bookmark'
 
 type ListWrapper = {
   type: '__list_wrapper'
@@ -468,7 +467,12 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
         </Paragraph>
       )
     case 'bookmark':
-      return <Bookmark url={block.bookmark.url} />
+      return (
+        <React.Suspense fallback={<Skeleton url={block.bookmark.url} />}>
+          {/* @ts-ignore Server Components */}
+          <Bookmark url={block.bookmark.url} />
+        </React.Suspense>
+      )
     case 'image':
       const imageUrl =
         block.image.type === 'external'
