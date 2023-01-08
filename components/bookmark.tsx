@@ -59,16 +59,28 @@ const Bookmark: React.FC<Props> = ({ url }) => {
     <figure className={'mb-2 flex h-40 max-w-2xl border border-gray-200'}>
       <div
         className={
-          'flex w-3/5 flex-shrink-0 flex-grow-0 flex-col items-start justify-center p-4'
+          'flex w-3/5 flex-shrink-0 flex-grow-0 flex-col items-start justify-center p-2 md:p-4'
         }
       >
-        <div className={'mb-2 font-bold leading-normal line-clamp-2'}>
+        <div
+          className={'mb-2 flex-shrink-0 font-bold leading-normal line-clamp-2'}
+        >
           {title ?? _url}
         </div>
         {description && (
-          <div className={'mb-1 text-sm leading-normal'}>{description}</div>
+          <div className={'mb-1 flex-shrink flex-grow text-sm leading-normal'}>
+            {description}
+          </div>
         )}
-        <div className={'text-ellipsis text-xs leading-normal'}>{_url}</div>
+        <div className={'max-w-full text-xs leading-normal text-gray-600'}>
+          <span
+            className={
+              'inline-block h-full w-full overflow-x-hidden line-clamp-1'
+            }
+          >
+            {_url}
+          </span>
+        </div>
       </div>
       {imageUrl && (
         <div
