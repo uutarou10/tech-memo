@@ -1,15 +1,12 @@
-import { ImageResponse } from '@vercel/og'
-import { NextRequest } from 'next/server'
+import { ImageResponse } from 'next/server'
+import { getClient, getPageMeta } from '#/api/notion'
 
-export const config = {
-  runtime: 'experimental-edge'
-}
-
-export default function (req: NextRequest) {
-  const {
-    nextUrl: { searchParams }
-  } = req
-  const title = searchParams.get('title')
+export default async function OpengraphImage({
+  params: { id }
+}: {
+  params: { id: string }
+}) {
+  const { title } = await getPageMeta(getClient(), id)
 
   const width = 1200
   const height = 630

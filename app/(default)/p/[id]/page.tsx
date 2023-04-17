@@ -3,6 +3,25 @@ import { getClient, getPageList, getPageMeta } from '#/api/notion'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import 'highlight.js/styles/github-dark.css'
+import { Metadata } from 'next'
+
+export const generateMetadata = async ({
+  params: { id }
+}: {
+  params: { id: string }
+}): Promise<Metadata> => {
+  const { title, description } = await getPageMeta(getClient(), id)
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title: title,
+      description: description,
+      type: 'article'
+    }
+  }
+}
 
 export async function generateStaticParams() {
   const pages = await getPageList(getClient())

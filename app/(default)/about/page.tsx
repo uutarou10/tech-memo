@@ -1,5 +1,14 @@
 import { NotionBlocks } from '#/components/notionBlock'
 
+export const metadata = {
+  title: 'このサイトについて',
+  description: 'tips chipsについて',
+  openGraph: {
+    title: 'このサイトについて',
+    description: 'tips chipsについて'
+  }
+}
+
 const AboutPage = () => {
   return (
     <main>
