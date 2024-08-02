@@ -1,9 +1,7 @@
 import { ImageResponse } from 'next/server'
 import { getClient, getPageMeta } from '#/api/notion'
 
-export const config = {
-  runtime: 'experimental-edge'
-}
+export const runtime = 'experimental-edge'
 
 export default async function OpengraphImage({
   params: { id }
