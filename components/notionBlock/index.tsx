@@ -252,7 +252,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           ))}
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -266,7 +265,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           ))}
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -280,7 +278,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           ))}
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -294,7 +291,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           ))}
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -322,7 +318,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           ))}
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -336,7 +331,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           ))}
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -348,7 +342,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           <RichTexts richTexts={block.quote.rich_text} />
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -362,7 +355,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           <RichTexts richTexts={block.to_do.rich_text} />
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -376,7 +368,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           </summary>
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -407,7 +398,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
           <RichTexts richTexts={block.callout.rich_text} />
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -420,7 +410,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
         <div className={'flex flex-col gap-0 md:flex-row md:gap-2'}>
           {block.has_children ? (
             <>
-              {/* @ts-ignore Server Components */}
               <NotionBlocks parentBlockId={block.id} />
             </>
           ) : null}
@@ -430,17 +419,13 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
       return (
         <div className={'flex-grow'}>
           {block.has_children ? (
-            <>
-              {/* @ts-ignore Server Components */}
-              <NotionBlocks parentBlockId={block.id} />
-            </>
+            <NotionBlocks parentBlockId={block.id} />
           ) : null}
         </div>
       )
     case 'table':
       return (
         <>
-          {/* @ts-ignore Server Components */}
           <Table
             parentBlockId={block.id}
             hasColumnHeader={block.table.has_column_header}
@@ -469,7 +454,6 @@ const NotionBlock: React.FC<{ block: BlockObjectResponse | ListWrapper }> = ({
     case 'bookmark':
       return (
         <React.Suspense fallback={<Skeleton url={block.bookmark.url} />}>
-          {/* @ts-ignore Server Components */}
           <Bookmark url={block.bookmark.url} />
         </React.Suspense>
       )

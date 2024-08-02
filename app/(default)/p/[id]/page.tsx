@@ -44,7 +44,6 @@ export default async function Page({ params }: { params: { id: string } }) {
         </time>
       </div>
       <div className={'text-base leading-loose'}>
-        {/* @ts-ignore Server Component */}
         <NotionBlocks parentBlockId={id} />
       </div>
     </main>
