@@ -5,8 +5,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '**.amazonaws.com',
-        port: '',
-        pathname: '/secure.notion-static.com/**'
+        port: ''
       }
     ]
   }
