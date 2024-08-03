@@ -8,6 +8,11 @@ const nextConfig = {
         port: ''
       }
     ]
+  },
+  logging: {
+    fetches: {
+      fullUrl: true
+    }
   }
 }
 

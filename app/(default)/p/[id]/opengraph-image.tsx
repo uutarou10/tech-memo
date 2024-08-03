@@ -1,4 +1,4 @@
-import { ImageResponse } from 'next/server'
+import { ImageResponse } from 'next/og'
 import { getClient, getPageMeta } from '#/api/notion'
 
 export const runtime = 'experimental-edge'

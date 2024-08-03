@@ -1,10 +1,6 @@
 import ArticleListItem from '#/components/articleListItem'
 import { getClient, getPageList } from '#/api/notion'
 
-export async function generateStaticParams() {
-  return []
-}
-
 export default async function Home() {
   const pages = await getPageList(getClient())
 

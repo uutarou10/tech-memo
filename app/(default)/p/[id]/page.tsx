@@ -23,11 +23,6 @@ export const generateMetadata = async ({
   }
 }
 
-export async function generateStaticParams() {
-  const pages = await getPageList(getClient())
-  return pages.map(page => ({ id: page.id }))
-}
-
 export default async function Page({ params }: { params: { id: string } }) {
   const { id } = params
   dayjs.extend(relativeTime)
