@@ -11,7 +11,7 @@ type Props = {
 const useImageData = (blockId: string) => {
   return useSWRImmutable<{ imageUrl: string; isExternal: boolean }>(
     `/api/notion/image?blockId=${blockId}`,
-    url => fetch(url).then(res => res.json())
+    (url: string) => fetch(url).then(res => res.json())
   )
 }
 
